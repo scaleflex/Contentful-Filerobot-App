@@ -2,7 +2,7 @@ import React from 'react';
 import { Paragraph } from '@contentful/f36-components';
 import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
 
-const Field = () => {
+const Field = () => { // @Todo: Gotta put FMAW here!
   const sdk = useSDK();
   /*
      To use the cma, inject it as follows.
