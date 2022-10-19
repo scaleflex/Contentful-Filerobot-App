@@ -8,13 +8,13 @@ const ConfigScreen = () => {
     color: '#d7f0fa',
     description: 'Scaleflex Filerobot',
     parameterDefinitions: [
-      {
-        "id": "cname",
-        "type": "Symbol",
-        "name": "CNAME",
-        "description": "CNAME",
-        "required": true
-      },
+      // {
+      //   "id": "cname",
+      //   "type": "Symbol",
+      //   "name": "CNAME",
+      //   "description": "CNAME",
+      //   "required": true
+      // },
       {
         "id": "token",
         "type": "Symbol",
@@ -39,9 +39,9 @@ const ConfigScreen = () => {
     ],
     validateParameters: () => null,
     makeThumbnail: asset => asset.thumbnailUrl,
-    renderDialog: async (sdk) => {
-      const config = sdk.parameters.invocation;
-    },
+    // renderDialog: async (sdk) => {
+    //   const config = sdk.parameters.invocation;
+    // },
     openDialog: async (sdk, currentValue, config) => {
       return await sdk.dialogs.openCurrentApp({
         parameters: { config, currentValue },

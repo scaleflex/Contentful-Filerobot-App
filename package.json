@@ -1,6 +1,6 @@
 {
   "name": "@contentful/filerobot-asset",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@contentful/app-sdk": "4.12.1",
@@ -8,6 +8,9 @@
     "@contentful/f36-components": "4.20.1",
     "@contentful/f36-tokens": "4.0.1",
     "@contentful/react-apps-toolkit": "1.2.7",
+    "@filerobot/core": "^1.0.127-alpha.0",
+    "@filerobot/explorer": "^1.0.127-alpha.0",
+    "@filerobot/xhr-upload": "^1.0.127-alpha.0",
     "contentful-management": "10.13.0",
     "emotion": "10.0.27",
     "react": "17.0.2",
