@@ -28,14 +28,32 @@ const Field = () => {
     var existingMedia = sdk.entry.fields.fmaw.getValue();
     existingMedia = existingMedia ? existingMedia : {};
     
+    // Displaying previously selected media
     if (Object.keys(existingMedia).length > 0)
     {
-      Object.keys(existingMedia).forEach((key) => {
-        var value = existingMedia[key];
-
+      Object.keys(existingMedia).forEach((uniqueId) => {
+        
+        // Creating image tile
         var tile = document.createElement('div');
+        var url = existingMedia[uniqueId];
         tile.classList.add('tile');
-        tile.innerHTML = `<img src=${value} /><span class="close" id=${key} onClick="this.parentNode.remove(); var existingMedia = sdk.entry.fields.fmaw.getValue(); existingMedia = existingMedia ? existingMedia : {}; delete existingMedia[this.id]; sdk.entry.fields.fmaw.setValue(existingMedia);"></span>`;
+        tile.innerHTML = `<img src=${url} /><span class="close" id=${uniqueId}></span>`;
+        
+        // Add delete-image-tile functionality
+        var closeBtn = tile.querySelector('.close');
+        closeBtn.addEventListener("click", function() {
+
+          if (isPublished) 
+          { // Disable deletion if already published
+            return;
+          }
+
+          tile.remove();
+          var existingMedia = sdk.entry.fields.fmaw.getValue(); 
+          existingMedia = existingMedia ? existingMedia : {}; 
+          delete existingMedia[closeBtn.id]; 
+          sdk.entry.fields.fmaw.setValue(existingMedia);
+        });
 
         document.getElementById('selected-images').appendChild(tile);
       });
@@ -69,22 +87,41 @@ const Field = () => {
           },
         })
         .use(XHRUpload)
-        // .on('complete', async ({ failed, uploadID, successful }) => { })
+        // .on('complete', async ({ failed, uploadID, successful }) => { }) // Since we used "hideUploadButton: true", on-complete is not needed
         .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
           files.forEach((item, index) => {
+
+            // Rid the query param: "vh"
             var url = new URL(item.file.url.cdn);
             var params = new URLSearchParams(url.search);
             params.delete('vh');
             url = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
 
-            var uniqueId = `${Math.floor(Math.random() * 1000000000000000)}${Date.now()}`;
-
+            // Create an image tile
             var tile = document.createElement('div');
+            var uniqueId = `${Math.floor(Math.random() * 1000000000000000)}${Date.now()}`;
             tile.classList.add('tile');
-            tile.innerHTML = `<img src=${url} /><span class="close" id=${uniqueId} onClick="this.parentNode.remove(); var existingMedia = sdk.entry.fields.fmaw.getValue(); existingMedia = existingMedia ? existingMedia : {}; delete existingMedia[this.id]; sdk.entry.fields.fmaw.setValue(existingMedia);"></span>`;
+            tile.innerHTML = `<img src=${url} /><span class="close" id=${uniqueId}></span>`;
+
+            // Add delete-image-tile functionality
+            var closeBtn = tile.querySelector('.close');
+            closeBtn.addEventListener("click", function() {
+              
+              if (isPublished) 
+              { // Disable deletion if already published
+                return;
+              }
+
+              tile.remove();
+              var existingMedia = sdk.entry.fields.fmaw.getValue(); 
+              existingMedia = existingMedia ? existingMedia : {}; 
+              delete existingMedia[uniqueId]; 
+              sdk.entry.fields.fmaw.setValue(existingMedia);
+            });
 
             document.getElementById('selected-images').appendChild(tile);
 
+            // Stored updated list of selected media to Contentful database
             var existingMedia = sdk.entry.fields.fmaw.getValue();
             existingMedia = existingMedia ? existingMedia : {};
             existingMedia[uniqueId] = url;
