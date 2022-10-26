@@ -37,16 +37,13 @@ const ConfigScreen = () => {
         "required": true
       }
     ],
-    validateParameters: () => null,
+    //validateParameters: () => null,
     makeThumbnail: asset => asset.thumbnailUrl,
-    // renderDialog: async (sdk) => {
-    //   const config = sdk.parameters.invocation;
+    // openDialog: async (sdk, currentValue, config) => {
+    //   return await sdk.dialogs.openCurrentApp({
+    //     parameters: { config, currentValue },
+    //   });
     // },
-    openDialog: async (sdk, currentValue, config) => {
-      return await sdk.dialogs.openCurrentApp({
-        parameters: { config, currentValue },
-      });
-    },
     isDisabled: () => false
   });
 };
