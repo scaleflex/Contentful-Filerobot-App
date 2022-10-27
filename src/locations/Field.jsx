@@ -13,7 +13,7 @@ const Field = () => {
   useAutoResizer();
   const configs = sdk.parameters.installation;
   const filerobot = useRef(null);
-  var isPublished = !!sdk.entry.getSys().publishedVersion;
+  let isPublished = !!sdk.entry.getSys().publishedVersion;
 
   if (!configs.directory || configs.directory === null || configs.directory === "")
   {
@@ -25,7 +25,7 @@ const Field = () => {
   }
 
   useEffect(() => {
-    var existingMedia = sdk.entry.fields.fmaw.getValue();
+    let existingMedia = sdk.entry.fields.fmaw.getValue();
     existingMedia = existingMedia ? existingMedia : {};
     
     // Displaying previously selected media
@@ -34,13 +34,13 @@ const Field = () => {
       Object.keys(existingMedia).forEach((uniqueId) => {
         
         // Creating image tile
-        var tile = document.createElement('div');
-        var url = existingMedia[uniqueId];
+        let tile = document.createElement('div');
+        let url = existingMedia[uniqueId];
         tile.classList.add('tile');
         tile.innerHTML = `<img src=${url} /><span class="close" id=${uniqueId}></span>`;
         
         // Add delete-image-tile functionality
-        var closeBtn = tile.querySelector('.close');
+        let closeBtn = tile.querySelector('.close');
         closeBtn.addEventListener("click", function() {
 
           if (isPublished) 
@@ -49,7 +49,7 @@ const Field = () => {
           }
 
           tile.remove();
-          var existingMedia = sdk.entry.fields.fmaw.getValue(); 
+          let existingMedia = sdk.entry.fields.fmaw.getValue(); 
           existingMedia = existingMedia ? existingMedia : {}; 
           delete existingMedia[closeBtn.id]; 
           sdk.entry.fields.fmaw.setValue(existingMedia);
@@ -61,12 +61,12 @@ const Field = () => {
 
     if (configs.token && configs.sectempid && !isPublished)
     {
-      const demoContainer = configs.token;
-      const demoSecurityTemplateID = configs.sectempid;
+      const filerobotToken = configs.token;
+      const filerobotSecTemp = configs.sectempid;
 
       filerobot.current = Filerobot({
-        securityTemplateID: demoSecurityTemplateID,
-        container: demoContainer
+        securityTemplateID: filerobotSecTemp,
+        container: filerobotToken
       })
         .use(Explorer, {
           config: {
@@ -92,19 +92,19 @@ const Field = () => {
           files.forEach((item, index) => {
 
             // Rid the query param: "vh"
-            var url = new URL(item.file.url.cdn);
-            var params = new URLSearchParams(url.search);
+            let url = new URL(item.file.url.cdn);
+            let params = new URLSearchParams(url.search);
             params.delete('vh');
             url = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
 
             // Create an image tile
-            var tile = document.createElement('div');
-            var uniqueId = `${Math.floor(Math.random() * 1000000000000000)}${Date.now()}`;
+            let tile = document.createElement('div');
+            let uniqueId = `${Math.floor(Math.random() * 1000000000000000)}${Date.now()}`;
             tile.classList.add('tile');
             tile.innerHTML = `<img src=${url} /><span class="close" id=${uniqueId}></span>`;
 
             // Add delete-image-tile functionality
-            var closeBtn = tile.querySelector('.close');
+            let closeBtn = tile.querySelector('.close');
             closeBtn.addEventListener("click", function() {
               
               if (isPublished) 
@@ -113,7 +113,7 @@ const Field = () => {
               }
 
               tile.remove();
-              var existingMedia = sdk.entry.fields.fmaw.getValue(); 
+              let existingMedia = sdk.entry.fields.fmaw.getValue(); 
               existingMedia = existingMedia ? existingMedia : {}; 
               delete existingMedia[uniqueId]; 
               sdk.entry.fields.fmaw.setValue(existingMedia);
@@ -122,7 +122,7 @@ const Field = () => {
             document.getElementById('selected-images').appendChild(tile);
 
             // Stored updated list of selected media to Contentful database
-            var existingMedia = sdk.entry.fields.fmaw.getValue();
+            let existingMedia = sdk.entry.fields.fmaw.getValue();
             existingMedia = existingMedia ? existingMedia : {};
             existingMedia[uniqueId] = url;
             sdk.entry.fields.fmaw.setValue(existingMedia);
