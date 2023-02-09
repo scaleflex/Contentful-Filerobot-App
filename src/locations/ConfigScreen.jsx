@@ -18,22 +18,22 @@ const ConfigScreen = () => {
       {
         "id": "token",
         "type": "Symbol",
-        "name": "Token",
-        "description": "Token",
+        "name": "Filerobot token",
+        "description": "Filerobot token from your Filerobot account",
         "required": true
       },
       {
         "id": "sectempid",
         "type": "Symbol",
-        "name": "Security Template ID",
-        "description": "Security Template ID",
+        "name": "Security Template Identifier",
+        "description": "To load the Filerobot Widget or Filerobot Image Editor, you you need to create a Security Template in your Filerobot Asset Hub first, in order for your WordPress instantiation of the Filerobot Widget to obtain proper credentials and access your storage",
         "required": true
       },
       {
         "id": "directory",
         "type": "Symbol",
-        "name": "Directory",
-        "description": "Directory",
+        "name": "Filerobot upload directory",
+        "description": "The directory in your Filerobot account, where the files will be stored",
         "required": true
       }
     ],
