@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Paragraph } from '@contentful/f36-components';
 import { useSDK, useAutoResizer } from '@contentful/react-apps-toolkit';
 import Filerobot from '@filerobot/core';
@@ -13,7 +13,7 @@ const Field = () => {
   useAutoResizer();
   const configs = sdk.parameters.installation;
   const filerobot = useRef(null);
-  let isPublished = !!sdk.entry.getSys().publishedVersion;
+  const [isPublished, setIsPublished] = useState( !!sdk.entry.getSys().publishedVersion );
 
   if (!configs.directory || configs.directory === null || configs.directory === "")
   {
@@ -25,12 +25,23 @@ const Field = () => {
   }
 
   useEffect(() => {
+    function sysChangeHandler(value) 
+    {
+      setIsPublished( !!sdk.entry.getSys().publishedVersion );
+    }
+    sdk.entry.onSysChanged(sysChangeHandler);
+  }, [sdk]);
+
+  useEffect(() => {
     let existingMedia = sdk.entry.fields.fmaw.getValue();
     existingMedia = existingMedia ? existingMedia : {};
     
     // Displaying previously selected media
     if (Object.keys(existingMedia).length > 0)
     {
+      let selectedImages = document.getElementById('selected-images');
+      selectedImages.innerHTML = '';
+
       Object.keys(existingMedia).forEach((uniqueId) => {
         
         // Creating image tile
@@ -55,7 +66,7 @@ const Field = () => {
           sdk.entry.fields.fmaw.setValue(existingMedia);
         });
 
-        document.getElementById('selected-images').appendChild(tile);
+        selectedImages.appendChild(tile);
       });
     }
 
