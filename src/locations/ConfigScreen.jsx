@@ -3,10 +3,10 @@ import { setup } from '@contentful/dam-app-base';
 const ConfigScreen = () => {
   setup({
     cta: 'Select assets',
-    name: 'Scaleflex Filerobot',
+    name: 'Filerobot from Scaleflex',
     logo: 'https://assets.scaleflex.com/Marketing/Logos/Filerobot+Logos/Favicon/FILEROBOT+favicon.ico',
     color: '#d7f0fa',
-    description: 'Scaleflex Filerobot',
+    description: 'Filerobot is a scalable and performance-oriented Digital Asset Management platform with integrated image and video optimizers to store, organize, optimize and deliver your media assets such as images, videos, PDFs and many other brand assets fast all around the world to all device types.',
     parameterDefinitions: [
       // {
       //   "id": "cname",
