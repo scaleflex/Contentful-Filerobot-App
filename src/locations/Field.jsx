@@ -30,7 +30,7 @@ const Field = () => {
                 shouldCloseOnEscapePress: true,
             })
             .then((imageFromWidget) => {
-                setImages(imageFromWidget)
+                setImages([...images, ...imageFromWidget])
                 sdk.field.setValue(imageFromWidget).then((data) => sdk.entry.save())
             });
     }
