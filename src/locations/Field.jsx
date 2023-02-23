@@ -1,25 +1,20 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Paragraph} from '@contentful/f36-components';
+import React, {useState, useEffect} from 'react';
+import {Grid, Box, Stack, Button} from '@contentful/f36-components';
+import * as icons from '@contentful/f36-icons';
 import {useSDK, useAutoResizer} from '@contentful/react-apps-toolkit';
-import Filerobot from '@filerobot/core';
-import Explorer from '@filerobot/explorer';
-import XHRUpload from '@filerobot/xhr-upload';
 import '@filerobot/core/dist/style.min.css';
 import '@filerobot/explorer/dist/style.min.css';
 import './Field.css';
 import {createClient} from 'contentful-management'
-import { Button, Modal } from '@contentful/forma-36-react-components';
-import '@contentful/forma-36-react-components/dist/styles.css';
 
 const Field = () => {
     const sdk = useSDK();
     useAutoResizer();
-    const configs = sdk.parameters.installation;
-    const filerobot = useRef(null);
+
     const [isPublished, setIsPublished] = useState(!!sdk.entry.getSys().publishedVersion);
     const [supportedFields, setSupportedFields] = useState([])
     const [isSupport, setIsSupport] = useState(false)
-    const [images, setImages] = useState({})
+    const [images, setImages] = useState([])
 
     useEffect(() => {
         async function fetchData() {
@@ -55,13 +50,6 @@ const Field = () => {
         }
     }, [supportedFields, sdk])
 
-    if (!configs.directory || configs.directory === "") {
-        configs.directory = "/";
-    } else if (configs.directory.charAt(0) !== "/") {
-        configs.directory = `/${configs.directory}`;
-    }
-
-
     useEffect(() => {
         function sysChangeHandler(value) {
             setIsPublished(!!sdk.entry.getSys().publishedVersion);
@@ -72,93 +60,76 @@ const Field = () => {
 
     useEffect(() => {
         let existingMedia = sdk.field.getValue();
-        existingMedia = existingMedia ? existingMedia : {};
-        if (Object.keys(existingMedia).length > 0) {
+        console.log(existingMedia)
+        existingMedia = existingMedia ? existingMedia : [];
+        if (existingMedia.length > 0) {
             setImages(existingMedia)
         }
-        if (configs.token && configs.sectempid && isSupport) {
-            console.log("#widget-"+sdk.field.id)
-            const filerobotToken = configs.token;
-            const filerobotSecTemp = configs.sectempid;
+    }, [sdk, isSupport]);
 
-            filerobot.current = Filerobot({
-                securityTemplateID: filerobotSecTemp,
-                container: filerobotToken
+    const showFilerobotWidget = () => {
+        sdk.dialogs
+            .openCurrentApp({
+                title: "Filerobot by Scaleflex",
+                width: 750,
+                minHeight: 500,
+                allowHeightOverflow: true,
+                shouldCloseOnOverlayClick: true,
+                shouldCloseOnEscapePress: true,
             })
-                .use(Explorer, {
-                    config: {
-                        rootFolderPath: configs.directory
-                    },
-                    target: "#widget-"+sdk.field.id,
-                    inline: true,
-                    width: '100%',
-                    height: '100%',
-                    disableExportButton: true,
-                    hideExportButtonIcon: true,
-                    preventExportDefaultBehavior: true,
-                    hideUploadButton: true,
-                    locale: {
-                        strings: {
-                            mutualizedExportButtonLabel: 'Add'
-                        }
-                    },
-                })
-                .use(XHRUpload)
-                // .on('complete', async ({ failed, uploadID, successful }) => { }) // Since we used "hideUploadButton: true", on-complete is not needed
-                .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
-                    files.forEach((item, index) => {
-
-                        // Rid the query param: "vh"
-                        let url = new URL(item.file.url.cdn);
-                        let params = new URLSearchParams(url.search);
-                        params.delete('vh');
-                        url = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
-
-                        // Create an image tile
-                        let uniqueId = `${Math.floor(Math.random() * 1000000000000000)}${Date.now()}`;
-
-                        // Stored updated list of selected media to Contentful database
-                        let existingMedia = sdk.field.getValue();
-                        existingMedia = existingMedia ? existingMedia : {};
-                        existingMedia[uniqueId] = url;
-                        sdk.field.setValue(existingMedia);
-                        setImages(existingMedia);
-                    });
-                });
-
-            return () => {
-                filerobot.current.close();
-            }
-        }
-    }, [sdk, configs, filerobot, isSupport]);
-
-    const removeImage = (key) => {
-        let tempImages = images
-        delete tempImages[key]
-        setImages(tempImages)
-        sdk.field.setValue(tempImages)
-        console.log(tempImages)
+            .then((imageFromWidget) => {
+                console.log(imageFromWidget)
+                setImages(imageFromWidget)
+                sdk.field.setValue(imageFromWidget)
+            });
     }
 
-    if (!configs.token || !configs.sectempid) return <Paragraph>Please set Filerobot token and security template ID.</Paragraph>;
+    const removeImage = (imageId) => {
+        setImages(images.filter((image, index) => image.id !== imageId))
+        sdk.field.removeValue()
+    }
+
+    const clearAll = () => {
+        setImages([])
+        sdk.field.setValue(null)
+    }
 
     return (
-        <div>
-            <div id={"widget-"+sdk.field.id}></div>
-            <div>
-                {Object.keys(images).length > 0 && (
-                    <>
-                        {Object.keys(images).map((key) => (
-                            <div key={key}>
-                                <img src={images[key]} />
-                                <button onClick={() => removeImage(key)}>Remove</button>
-                            </div>
+        <>
+            <Stack flexDirection="column">
+                {images.length > 0 && (
+                    <Grid
+                        style={{width: '100%'}}
+                        columns="1fr 1fr 1fr 1fr"
+                        rowGap="spacingM"
+                        columnGap="spacingM"
+                    >
+                        {images.map((image, index) => (
+                            <Grid.Item key={index} style={{zIndex: '1', padding:'8px', width: '200px', height: '200px', position: 'relative'}}>
+                                <Box style={{borderRadius: '5px', padding: '5px', border: '1px solid lightgray'}}>
+                                    <icons.DeleteIcon
+                                        variant="secondary"
+                                        style={{zIndex: '9999', position:'absolute', bottom: '0', right: '0', cursor: 'pointer'}}
+                                        onClick={() => removeImage(image.id)} />
+                                    <img style={{borderRadius: '5px'}} src={image.url + "?width=180&height=180"} alt={image.id} />
+                                </Box>
+                            </Grid.Item>
                         ))}
-                    </>
+                    </Grid>
                 )}
-            </div>
-        </div>
-    )
+            </Stack>
+            <Stack style={{marginTop: '20px'}}>
+                <Button onClick={() => showFilerobotWidget()}>
+                    Asset Manager
+                </Button>
+                {images.length > 0 && (
+                    <Button variant="negative" onClick={() => clearAll()}>
+                        Clear all
+                    </Button>
+                )}
+            </Stack>
+        </>
+)
 };
 
 export default Field;

@@ -1,38 +1,16 @@
 import React from 'react';
 import { Paragraph } from '@contentful/f36-components';
 import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
-import {Modal} from "@contentful/forma-36-react-components";
 
 const Entry = () => {
   const sdk = useSDK();
+  /*
+     To use the cma, inject it as follows.
+     If it is not needed, you can remove the next line.
+  */
+  // const cma = useCMA();
 
-  return <div
-      style={{
-        height: '800px',
-        width: '1200px'
-      }}
-  >
-    <div>
-      <h onClick={function noRefCheck(){}}>
-        Open modal
-      </h>
-      <Modal
-          isShown
-          modalContentProps={{
-            className: 'additional-modal-content-class'
-          }}
-          modalHeaderProps={{
-            className: 'additional-modal-header-class'
-          }}
-          onAfterOpen={function noRefCheck(){}}
-          onClose={function noRefCheck(){}}
-          size="fullWidth"
-          title="Default modal"
-      >
-        Modal content. It is centered by default.
-      </Modal>
-    </div>
-  </div>
+  return <Paragraph>Hello Entry Editor Component (AppId: {sdk.ids.app})</Paragraph>;
 };
 
 export default Entry;

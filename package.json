@@ -6,7 +6,6 @@
     "@contentful/app-sdk": "4.12.1",
     "@contentful/dam-app-base": "^2.0.25",
     "@contentful/f36-components": "4.20.1",
-    "@contentful/forma-36-react-components": "^3.100.7",
     "@contentful/react-apps-toolkit": "1.2.7",
     "@filerobot/core": "^1.0.127-alpha.0",
     "@filerobot/explorer": "^1.0.127-alpha.0",
