@@ -1,6 +1,7 @@
 import { setup } from '@contentful/dam-app-base';
 
 const ConfigScreen = () => {
+  console.log()
   setup({
     cta: 'Select assets',
     name: 'Filerobot from Scaleflex',
@@ -40,6 +41,7 @@ const ConfigScreen = () => {
     validateParameters: () => null,
     makeThumbnail: asset => asset.thumbnailUrl,
     openDialog: async (sdk, currentValue, config) => {
+
       return await sdk.dialogs.openCurrentApp({
         parameters: { config, currentValue },
       });
