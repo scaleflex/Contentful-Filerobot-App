@@ -51,7 +51,7 @@ const Field = () => {
                 {images.length > 0 && (
                     <Grid
                         style={{width: '100%'}}
-                        columns="1fr 1fr 1fr 1fr"
+                        columns="1fr 1fr 1fr"
                         rowGap="spacingM"
                         columnGap="spacingM"
                     >
