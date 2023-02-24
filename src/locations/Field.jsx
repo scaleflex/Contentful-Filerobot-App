@@ -30,9 +30,11 @@ const Field = () => {
                 shouldCloseOnEscapePress: true,
             })
             .then((assetsFromWidget) => {
-                let newAssetsList = assets.concat(assetsFromWidget)
-                setAssets(newAssetsList)
-                sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
+                if (Array.isArray(assetsFromWidget) && assetsFromWidget.length > 0) {
+                    let newAssetsList = assets.concat(assetsFromWidget)
+                    setAssets(newAssetsList)
+                    sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
+                }
             });
     }
 
