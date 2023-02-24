@@ -49,11 +49,11 @@ Or click "install now" on [https://www.contentful.com/marketplace/app/scaleflex-
 * **Filerobot Token:** Your Filerobot token from the Asset hub interface
 * **Security Template Identifier:** Security template ID, found in “Developers” top menu
 * **Filerobot upload directory:** This is the top storage folder for your assets.
-* **Assign to Fields:** App supported only JSON Object Field, you can specific which Field will be used The App
+* **Assign to Fields:** App supported only JSON Object Field, you can choose which Field will be used The App
 
 ### 5. Usage
 
-##### Step 1: Click to Asset Manager to open FMAW {#od_83ca8219}
+##### Step 1: Click to Asset Manager to open FMAW 
 
 ![Photo alt #responsive](./doc/imgs/7.png)
 
