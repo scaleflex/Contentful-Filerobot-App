@@ -24,7 +24,7 @@ You’ll get :
 https://app.contentful.com/spaces/{Your Space ID}/home
 ```
 
-### 2. [Register for a demo](https://www.scaleflex.com/contact-us){target="_blank"} if you don't already have a Filerobot account. {#od_e13c6c61}
+### 2. [Register for a demo](https://www.scaleflex.com/contact-us) if you don't already have a Filerobot account.
 
 ![Photo alt #responsive](./doc/imgs/1.png)
 
