@@ -1,7 +1,7 @@
-Contentful App {#od_62b92ab9}
+Contentful App 
 ==================
 
-### Features {#od_dfd4964d}
+### Features 
 
 * Asset manager Widget in Contentful Content Management
 * Support multiple file type
@@ -14,7 +14,7 @@ There are 3 simple steps for enabling the App on your Contentfull instance
 * Install the Filerobot App from Marketpkace
 * Add your security configuration parameters to access your Filerobot library
 
-### ··1. Sign up·· {#od_4941c597}
+### 1. Sign up
 
 Contentful is 100% Cloud Native, so you have to sign up for a hosted CMS at [https://be.contentful.com](https://be.contentful.com)
 
@@ -28,7 +28,7 @@ https://app.contentful.com/spaces/{Your Space ID}/home
 
 ![Photo alt #responsive](./doc/imgs/1.png)
 
-### 3. Install from Contentful Marketplace {#od_6e40e0fc}
+### 3. Install from Contentful Marketplace
 
 Find it here [https://www.contentful.com/marketplace/](https://www.contentful.com/marketplace/) and install it.
 
@@ -42,7 +42,7 @@ Or click "install now" on [https://www.contentful.com/marketplace/app/scaleflex-
 
 ![Photo alt #responsive](./doc/imgs/4.png)
 
-### 4. Configure App {#od_b9b03603}
+### 4. Configure App
 
 ![Photo alt #responsive](./doc/imgs/6.png)
 
@@ -51,7 +51,7 @@ Or click "install now" on [https://www.contentful.com/marketplace/app/scaleflex-
 * **Filerobot upload directory:** This is the top storage folder for your assets.
 * **Assign to Fields:** App supported only JSON Object Field, you can specific which Field will be used The App
 
-### 5. Usage {#od_da860408}
+### 5. Usage
 
 ##### Step 1: Click to Asset Manager to open FMAW {#od_83ca8219}
 
@@ -73,7 +73,7 @@ Then you can delete each item or clear all(5)
 ![Photo alt #responsive](./doc/imgs/10.png)
 
 
-### 6. Json Format {#od_f9476583}
+### 6. Json Format
 
 ```json 
 {
