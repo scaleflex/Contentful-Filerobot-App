@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import {Grid, Box, Stack, Button} from '@contentful/f36-components';
+import {Grid, Box, Stack, Button, Asset} from '@contentful/f36-components';
 import * as icons from '@contentful/f36-icons';
 import {useSDK, useAutoResizer} from '@contentful/react-apps-toolkit';
 import '@filerobot/core/dist/style.min.css';
@@ -9,13 +9,13 @@ import './Field.css';
 const Field = () => {
     const sdk = useSDK();
     useAutoResizer();
-    const [images, setImages] = useState([])
+    const [assets, setAssets] = useState([])
 
     useEffect(() => {
-        let existingMedia = sdk.field.getValue();
-        existingMedia = existingMedia ? existingMedia : [];
-        if (existingMedia.length > 0) {
-            setImages(existingMedia)
+        let storedAssets = sdk.field.getValue();
+        storedAssets = storedAssets ? storedAssets : [];
+        if (storedAssets.length > 0) {
+            setAssets(storedAssets)
         }
     }, [sdk]);
 
@@ -29,33 +29,48 @@ const Field = () => {
                 shouldCloseOnOverlayClick: true,
                 shouldCloseOnEscapePress: true,
             })
-            .then((imageFromWidget) => {
-                setImages([...images, ...imageFromWidget])
-                sdk.field.setValue(imageFromWidget).then((data) => sdk.entry.save())
+            .then((assetsFromWidget) => {
+                let newAssetsList = assets.concat(assetsFromWidget)
+                setAssets(newAssetsList)
+                sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
             });
     }
 
-    const removeImage = (imageId) => {
-        setImages(images.filter((image, index) => image.id !== imageId))
-        sdk.field.removeValue().then((data) => sdk.entry.save())
+    const removeAsset = (assetId) => {
+        let filteredAssets = assets.filter((asset, index) => asset.id !== assetId)
+        setAssets(filteredAssets)
+        sdk.field.setValue(filteredAssets).then((data) => sdk.entry.save())
     }
 
     const clearAll = () => {
-        setImages([])
-        sdk.field.setValue(null).then((data) => sdk.entry.save())
+        setAssets([])
+        sdk.field.removeValue().then((data) => sdk.entry.save())
+    }
+
+    const getType = (type) => {
+        if (type?.includes('pdf')) return 'pdf'
+        else if (type?.includes('text')) return 'plaintext'
+        else if (type?.includes('audio')) return 'audio'
+        else if (type?.includes('html')) return 'markup'
+        else if (type?.includes('richtext')) return 'richtext'
+        else if (type?.includes('spreadsheet')) return 'spreadsheet'
+        else if (type?.includes('presentation')) return 'presentation'
+        else if (type?.includes('video')) return 'video'
+        else if (type?.includes('code')) return 'code'
+        else return 'archive'
     }
 
     return (
         <>
             <Stack flexDirection="column">
-                {images.length > 0 && (
+                {assets.length > 0 && (
                     <Grid
                         style={{width: '100%'}}
                         columns="1fr 1fr 1fr"
                         rowGap="spacingM"
                         columnGap="spacingM"
                     >
-                        {images.map((image, index) => (
+                        {assets.map((asset, index) => (
                             <Grid.Item key={index} style={{
                                 zIndex: '1',
                                 padding: '8px',
@@ -73,9 +88,19 @@ const Field = () => {
                                             right: '0',
                                             cursor: 'pointer'
                                         }}
-                                        onClick={() => removeImage(image.id)}/>
-                                    <img style={{borderRadius: '5px'}} src={image.url + "?width=180&height=180"}
-                                         alt={image.id}/>
+                                        onClick={() => removeAsset(asset.id)}/>
+                                    {asset?.type?.includes('image') && (
+                                        <img style={{borderRadius: '5px'}} src={asset.url + "?width=180&height=180"}
+                                             alt={asset.id}/>
+                                    )}
+                                    {!asset?.type?.includes('image') && (
+                                        <Asset
+                                            style={{width: '180px', height: '180px'}}
+                                            src={asset.url}
+                                            title={asset.name}
+                                            type={getType(asset?.type)}
+                                        />
+                                    )}
                                 </Box>
                             </Grid.Item>
                         ))}
@@ -86,7 +111,7 @@ const Field = () => {
                 <Button variant="secondary" startIcon={<icons.AssetIcon />} size="small" onClick={() => showFilerobotWidget()}>
                     Asset Manager
                 </Button>
-                {images.length > 0 && (
+                {assets.length > 0 && (
                     <Button size="small" startIcon={<icons.CloseIcon />} variant="negative" onClick={() => clearAll()}>
                         Clear all
                     </Button>

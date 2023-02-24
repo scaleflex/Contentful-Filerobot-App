@@ -38,7 +38,7 @@ const Dialog = () => {
                     disableExportButton: true,
                     hideExportButtonIcon: true,
                     preventExportDefaultBehavior: true,
-                    hideUploadButton: true,
+                    hideUploadButton: false,
                     locale: {
                         strings: {
                             mutualizedExportButtonLabel: 'Add'
@@ -47,30 +47,31 @@ const Dialog = () => {
                 })
                 .use(XHRUpload)
                 .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
-                    let images = []
+                    let assets = []
                     files.forEach((item, index) => {
-
-                        // Rid the query param: "vh"
-                        let url = new URL(item.file.url.cdn);
+                        let url = new URL(item.file?.url?.cdn);
                         let params = new URLSearchParams(url.search);
                         params.delete('vh');
                         url = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
 
                         // Create an image tile
-                        const uniqueId = `${Math.floor(Math.random() * 1000000000000000)}${Date.now()}`;
-                        images.push({
+                        assets.push({
                             url,
-                            id: uniqueId
+                            id: item?.file?.uuid,
+                            name: item?.file?.name,
+                            extension: item?.file?.extension,
+                            type: item?.file?.type,
+                            meta: item?.file?.meta
                         })
                     });
-                    sdk.close(images);
+                    sdk.close(assets);
                 });
 
             return () => {
                 filerobot.current.close();
             }
         }
-    }, [filerobot, configs])
+    }, [filerobot, configs, sdk])
 
     if (!configs.token || !configs.sectempid) return <Paragraph>Please set Filerobot token and security template
         ID.</Paragraph>;
