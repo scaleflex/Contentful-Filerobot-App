@@ -7,6 +7,11 @@
     "@contentful/f36-components": "4.70.0",
     "@contentful/f36-tokens": "4.0.5",
     "@contentful/react-apps-toolkit": "1.2.16",
+    "@filerobot/core": "^3.69.5",
+    "@filerobot/explorer": "^3.69.5",
+    "@filerobot/progress-panel": "^3.69.5",
+    "@filerobot/xhr-upload": "^3.69.5",
+    "@transloadit/prettier-bytes": "^0.3.4",
     "contentful-management": "10.46.4",
     "emotion": "10.0.27",
     "react": "18.3.1",
@@ -14,13 +19,14 @@
     "react-scripts": "5.0.1"
   },
   "scripts": {
-    "start": "cross-env BROWSER=none react-scripts start",
-    "build": "react-scripts build",
+    "start": "cross-env BROWSER=none GENERATE_SOURCEMAP=false react-scripts start",
+    "build": "react-scripts GENERATE_SOURCEMAP=false build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "create-app-definition": "contentful-app-scripts create-app-definition",
     "upload": "contentful-app-scripts upload --bundle-dir ./build",
-    "upload-ci": "contentful-app-scripts upload --ci --bundle-dir ./build --organization-id $CONTENTFUL_ORG_ID --definition-id $CONTENTFUL_APP_DEF_ID --token $CONTENTFUL_ACCESS_TOKEN"
+    "upload-ci": "contentful-app-scripts upload --ci --bundle-dir ./build --organization-id $CONTENTFUL_ORG_ID --definition-id $CONTENTFUL_APP_DEF_ID --token $CONTENTFUL_ACCESS_TOKEN",
+    "postinstall": "node fix-esm.js"
   },
   "eslintConfig": {
     "extends": "react-app"
