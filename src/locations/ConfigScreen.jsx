@@ -1,52 +1,61 @@
-import { setup } from '@contentful/dam-app-base';
+import React, { useCallback, useState, useEffect } from 'react';
+import { Heading, Form, Paragraph, Flex } from '@contentful/f36-components';
+import { css } from 'emotion';
+import { /* useCMA, */ useSDK } from '@contentful/react-apps-toolkit';
 
 const ConfigScreen = () => {
-  console.log()
-  setup({
-    cta: 'Select assets',
-    name: 'Filerobot from Scaleflex',
-    logo: 'https://assets.scaleflex.com/Marketing/Logos/Filerobot+Logos/Favicon/FILEROBOT+favicon.ico',
-    color: '#d7f0fa',
-    description: 'Filerobot is a scalable and performance-oriented Digital Asset Management platform with integrated image and video optimizers to store, organize, optimize and deliver your media assets such as images, videos, PDFs and many other brand assets fast all around the world to all device types.',
-    parameterDefinitions: [
-      // {
-      //   "id": "cname",
-      //   "type": "Symbol",
-      //   "name": "CNAME",
-      //   "description": "CNAME",
-      //   "required": true
-      // },
-      {
-        "id": "token",
-        "type": "Symbol",
-        "name": "Filerobot token",
-        "description": "Filerobot token from your Filerobot account",
-        "required": true
-      },
-      {
-        "id": "sectempid",
-        "type": "Symbol",
-        "name": "Security Template Identifier",
-        "description": "To load the Filerobot Widget or Filerobot Image Editor, you you need to create a Security Template in your Filerobot Asset Hub first, in order for your Contenful instantiation of the Filerobot Widget to obtain proper credentials and access your storage",
-        "required": true
-      },
-      {
-        "id": "directory",
-        "type": "Symbol",
-        "name": "Filerobot upload directory",
-        "description": "The directory in your Filerobot account, where the files will be stored",
-        "required": true
-      }
-    ],
-    validateParameters: () => null,
-    makeThumbnail: asset => asset.thumbnailUrl,
-    openDialog: async (sdk, currentValue, config) => {
+  const [parameters, setParameters] = useState({});
+  const sdk = useSDK();
+  /*
+     To use the cma, inject it as follows.
+     If it is not needed, you can remove the next line.
+  */
+  // const cma = useCMA();
+  const onConfigure = useCallback(async () => {
+    // This method will be called when a user clicks on "Install"
+    // or "Save" in the configuration screen.
+    // for more details see https://www.contentful.com/developers/docs/extensibility/ui-extensions/sdk-reference/#register-an-app-configuration-hook
 
-      return await sdk.dialogs.openCurrentApp({
-        parameters: { config, currentValue },
-      });
-    },
-    isDisabled: () => false
-  });
+    // Get current the state of EditorInterface and other entities
+    // related to this app installation
+    const currentState = await sdk.app.getCurrentState();
+    return {
+      // Parameters to be persisted as the app configuration.
+      parameters,
+      // In case you don't want to submit any update to app
+      // locations, you can just pass the currentState as is
+      targetState: currentState,
+    };
+  }, [parameters, sdk]);
+
+  useEffect(() => {
+    // `onConfigure` allows to configure a callback to be
+    // invoked when a user attempts to install the app or update
+    // its configuration.
+    sdk.app.onConfigure(() => onConfigure());
+  }, [sdk, onConfigure]);
+
+  useEffect(() => {
+    (async () => {
+      // Get current parameters of the app.
+      // If the app is not installed yet, `parameters` will be `null`.
+      const currentParameters = await sdk.app.getParameters();
+      if (currentParameters) {
+        setParameters(currentParameters);
+      }
+      // Once preparation has finished, call `setReady` to hide
+      // the loading screen and present the app to a user.
+      sdk.app.setReady();
+    })();
+  }, [sdk]);
+
+  return (
+    <Flex flexDirection="column" className={css({ margin: '80px', maxWidth: '800px' })}>
+      <Form>
+        <Heading>App Config</Heading>
+        <Paragraph>Welcome to your contentful app. This is your config page.</Paragraph>
+      </Form>
+    </Flex>
+  );
 };
 export default ConfigScreen;

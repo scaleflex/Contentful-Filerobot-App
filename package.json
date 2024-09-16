@@ -1,27 +1,26 @@
 {
-  "name": "@contentful/filerobot-asset",
-  "version": "1.0.2",
+  "name": "contentful-app",
+  "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@contentful/app-sdk": "4.12.1",
-    "@contentful/dam-app-base": "^2.0.25",
-    "@contentful/f36-components": "4.20.1",
-    "@contentful/react-apps-toolkit": "1.2.7",
-    "@filerobot/core": "^1.0.127-alpha.0",
-    "@filerobot/explorer": "^1.0.127-alpha.0",
-    "@filerobot/xhr-upload": "^1.0.127-alpha.0",
-    "react": "17.0.2",
-    "react-dom": "17.0.2",
+    "@contentful/app-sdk": "^4.29.1",
+    "@contentful/f36-components": "4.70.0",
+    "@contentful/f36-tokens": "4.0.5",
+    "@contentful/react-apps-toolkit": "1.2.16",
+    "contentful-management": "10.46.4",
+    "emotion": "10.0.27",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
     "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "cross-env BROWSER=none react-scripts start",
-    "build": "GENERATE_SOURCEMAP=false react-scripts build",
+    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "create-app-definition": "contentful-app-scripts create-app-definition",
     "upload": "contentful-app-scripts upload --bundle-dir ./build",
-    "upload-ci": "contentful-app-scripts upload --ci --bundle-dir ./build  --organization-id $CONTENTFUL_ORG_ID --definition-id $CONTENTFUL_APP_DEF_ID --token $CONTENTFUL_ACCESS_TOKEN"
+    "upload-ci": "contentful-app-scripts upload --ci --bundle-dir ./build --organization-id $CONTENTFUL_ORG_ID --definition-id $CONTENTFUL_APP_DEF_ID --token $CONTENTFUL_ACCESS_TOKEN"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -39,23 +38,10 @@
     ]
   },
   "devDependencies": {
-    "@contentful/app-scripts": "1.1.22",
-    "@testing-library/jest-dom": "5.16.5",
-    "@testing-library/react": "12.1.5",
+    "@contentful/app-scripts": "1.27.0",
+    "@testing-library/jest-dom": "5.17.0",
+    "@testing-library/react": "14.3.1",
     "cross-env": "7.0.3"
   },
-  "homepage": ".",
-  "author": {
-    "name": "Scaleflex"
-  },
-  "maintainers": [
-    {
-      "name": "Ruslan Aliyev"
-    }
-  ],
-  "keywords": [
-    "scaleflex",
-    "filerobot",
-    "contentful"
-  ]
+  "homepage": "."
 }
