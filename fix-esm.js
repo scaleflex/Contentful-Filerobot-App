@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 console.log("Scaleflex: Update package to support CommonJS Build");
 
-const packageJsonPath = path.resolve(__dirname, 'node_modules/react-filerobot-media-annotator/package.json');
+const packageJsonPath = path.resolve(__dirname, 'node_modules/@filerobot/explorer/node_modules/react-filerobot-media-annotator/package.json');
 console.log('Removed "type": "module" from react-filerobot-media-annotator/package.json');
 
 
