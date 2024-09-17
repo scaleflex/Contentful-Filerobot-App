@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Grid, Box, Stack, Button, Asset, AssetCard, MenuItem, DragHandle, Card} from '@contentful/f36-components';
+import {Grid, Stack, Button, Asset, MenuItem, DragHandle, Card, AssetCard } from '@contentful/f36-components';
 import * as icons from '@contentful/f36-icons';
 import { /* useCMA, */ useSDK} from '@contentful/react-apps-toolkit';
 import { DndContext } from '@dnd-kit/core';
@@ -23,12 +23,16 @@ const Field = () => {
         dragHandle: css({
           alignSelf: "stretch",
         }),
+        assetCard: css({
+            borderWidth: 0
+        })
       };
 
     useEffect(() => {
         let storedAssets = sdk.field.getValue();
         storedAssets = storedAssets ? storedAssets : [];
         if (storedAssets.length > 0) setAssets(storedAssets)
+        sdk.window.updateHeight(315)
     }, [sdk]);
 
     const showDAMWidget = () => {
@@ -90,34 +94,38 @@ const Field = () => {
         };
     
         return (
-          <Card
-            className={styles.card}
-            dragHandleRender={() => (
-              <DragHandle
-                as="button"
-                className={styles.dragHandle}
-                label="Move card"
-                {...attributes}
-                {...listeners}
-              />
-            )}
-            padding="none"
-            withDragHandle
-            ref={setNodeRef}
-            style={style}
-            actions={[
-                <MenuItem key="delete" onClick={() => removeAsset(asset.id)}>
-                    Delete
-                </MenuItem>,
-            ]}
-          >
-            <Asset
-                src={asset.url + "?width=200&height=200"}
-                alt={asset.id}
-                type={getType(asset?.type)}
-                title={asset.name}
-            />
-          </Card>
+            <div className=''>
+                <Card
+                    className={styles.card}
+                    dragHandleRender={() => (
+                    <DragHandle
+                        as="button"
+                        className={styles.dragHandle}
+                        label="Move card"
+                        {...attributes}
+                        {...listeners}
+                    />
+                    )}
+                    padding="none"
+                    withDragHandle
+                    ref={setNodeRef}
+                    style={style}
+                >
+                    <AssetCard
+                        className={styles.assetCard}
+                        size="small"
+                        actions={[
+                            <MenuItem key="delete" onClick={() => removeAsset(asset.id)}>
+                                Delete
+                            </MenuItem>,
+                        ]}
+                        src={asset.url + "?w=150&h=150&func=fit&bg_img_fit=1&bg_opacity=0.75"}
+                        type={getType(asset?.type)}
+                        title={asset.name}
+                    />
+                </Card>
+              
+            </div>
         );
     }
 
@@ -135,7 +143,7 @@ const Field = () => {
       };
 
     return (
-        <>
+        <div>
             <Stack>
                 <Button variant="secondary" startIcon={<icons.AssetIcon />} size="small" onClick={() => showDAMWidget()}>
                     Asset Manager
@@ -146,13 +154,13 @@ const Field = () => {
                     </Button>
                 )}
             </Stack>
-            {assets.length > 0 && (
-            <div style={{marginTop: '20px'}}>
+            
+            <Stack style={{marginTop: '20px'}}>
                 <DndContext onDragEnd={handleDragEnd}>
                     <SortableContext items={assets} strategy={horizontalListSortingStrategy}>
                         <Grid
                             style={{width: '100%'}}
-                            columns="1fr 1fr 1fr"
+                            columns="1fr 1fr 1fr 1fr"
                             rowGap="spacingM"
                             columnGap="spacingM"
                         >
@@ -162,9 +170,9 @@ const Field = () => {
                         </Grid>
                     </SortableContext>
                 </DndContext>
-            </div>
-            )}
-        </>
+            </Stack>
+            
+        </div>
     )
 };
 
