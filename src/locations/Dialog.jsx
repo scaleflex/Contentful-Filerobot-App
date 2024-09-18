@@ -51,7 +51,7 @@ const Dialog = () => {
                     hideDownloadButtonIcon: true,
                     preventDownloadDefaultBehavior: true,
                     noImgOperationsAndDownload: true,
-                    hideDownloadTransformationOption: true,
+                    hideDownloadTransformationOption: false,
                     disableFileResolutionFallback: true,
                     showFoldersTree: false,
                     defaultFieldKeyOfBulkEditPanel: 'title',
@@ -69,18 +69,17 @@ const Dialog = () => {
                 .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
                     let assets = []
                     files.forEach((item, index) => {
+                        console.log(JSON.stringify(item))
                         let url = new URL(item.file?.url?.cdn);
                         let params = new URLSearchParams(url.search);
                         params.delete('vh');
                         url = params.toString() ? `${url.origin}${url.pathname}?${params.toString()}` : `${url.origin}${url.pathname}`;
-
                         assets.push({
                             url,
                             id: item?.file?.uuid,
                             name: item?.file?.name,
                             extension: item?.file?.extension,
                             type: item?.file?.type,
-                            meta: item?.file?.meta
                         })
                     });
                     sdk.close(assets);

@@ -13,11 +13,14 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from "emotion";
   
 const Field = () => {
-    const defaultHeight = 225
+
+    const defaultHeight = 230
     const sdk = useSDK();
     const [assets, setAssets] = useState([])
     const [configs, setConfigs] = useState({})
     const [endpoint, setEndpoint] = useState('')
+    const [isLoading, setIsLoading] = useState(false)
+
     const styles = {
         card: css({
           // This lets us change z-index when dragging
@@ -43,10 +46,6 @@ const Field = () => {
         else return assetsCurrent
     }
 
-    const updateAssets = (assetsCurrent) => {
-        return getAssetsbyLimitConfig(getUniqueAssets(assetsCurrent))
-    }
-
     useEffect(() => {
         if (assets.length > 0) {
             sdk.window.updateHeight(defaultHeight * Math.ceil(assets.length / 4))
@@ -66,12 +65,13 @@ const Field = () => {
     }, [sdk]);
 
     useEffect(() => {
-        //setEndpoint('https://api.filerobot.com/' + data?.options.token + '/v5')
-        console.log(configs)
+        if ('token' in configs) {
+            setEndpoint('https://api.filerobot.com/' + configs.token + '/v5')
+        }
     }, [configs]);
 
       // Function to fetch data from an API
-    async function fetchfileData(uuid) {
+    async function fetchFileData(uuid) {
         const url = endpoint + '/files/' + uuid + '?format=select:human'
         const response = await fetch(url);
 
@@ -83,6 +83,49 @@ const Field = () => {
         // Parse the response data as JSON
         const data = await response.json();
         return data;
+    }
+
+    const getAttributesData = (file) => {
+        let r = {};
+        if ('attributes' in configs && configs.attributes !== '') {
+          let arr = configs.attributes.split(",");
+          for (let value of arr) {
+            let valueTrim = value.trim();
+            r[valueTrim] = file[valueTrim]
+          }
+          return r
+        }
+    }
+
+    const onSelectedFiles = async (assetsCurrent) => {
+        if ('attributes' in configs && configs.attributes !== '') {
+            setIsLoading(true)
+            const promises = assetsCurrent.map(async (file, index) => {
+                const uuid = file.id;
+                try {
+                    const response = await fetchFileData(uuid);
+                    if (response.status !== 'success') {
+                        throw new Error('Network response was not ok ' + response.statusText);
+                    }
+                    file.attributes = getAttributesData(response?.file);
+                    return file;
+                
+                } catch (error) {
+                console.error('Error fetching file data:', error);
+                }
+            });
+            const results = await Promise.all(promises);
+            setIsLoading(false)
+            return results;
+        }
+        return assetsCurrent
+    }
+
+    const updateAssets = (assetsCurrent) => {
+        onSelectedFiles(getAssetsbyLimitConfig(getUniqueAssets(assetsCurrent))).then((newAssetsList) => {
+            setAssets(newAssetsList)
+            sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
+        })
     }
 
     const showDAMWidget = () => {
@@ -98,10 +141,7 @@ const Field = () => {
             })
             .then((assetItems) => {
                 if (Array.isArray(assetItems) && assetItems.length > 0) {
-                    console.log(assetItems)
-                    let newAssetsList = updateAssets(assets.concat(assetItems))
-                    setAssets(newAssetsList)
-                    sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
+                   updateAssets(assets.concat(assetItems))
                 }
             });
     }
