@@ -21,6 +21,7 @@ const Field = () => {
     const [configs, setConfigs] = useState({})
     const [endpoint, setEndpoint] = useState('')
     const [isLoading, setIsLoading] = useState(false)
+    const [isHasLimit, setIsHasLimit] = useState(false)
 
     const styles = {
         card: css({
@@ -59,9 +60,11 @@ const Field = () => {
     useEffect(() => {
         let storedAssets = sdk.field.getValue();
         storedAssets = storedAssets ? storedAssets : [];
+
         if (storedAssets.length > 0) {
             setAssets(storedAssets)
         }
+
         setConfigs(sdk.parameters.installation)
     }, [sdk]);
 
@@ -69,6 +72,10 @@ const Field = () => {
         if ('token' in configs) {
             setEndpoint('https://api.filerobot.com/' + configs.token + '/v5')
         }
+
+        if ('limit' in configs && configs?.limit > 0) setIsHasLimit(true)
+        else setIsHasLimit(false)
+
     }, [configs]);
 
       // Function to fetch data from an API
@@ -195,13 +202,13 @@ const Field = () => {
             <Card
                 className={styles.card}
                 dragHandleRender={() => (
-                <DragHandle
-                    as="button"
-                    className={styles.dragHandle}
-                    label="Move card"
-                    {...attributes}
-                    {...listeners}
-                />
+                    <DragHandle
+                        as="button"
+                        className={styles.dragHandle}
+                        label="Move card"
+                        {...attributes}
+                        {...listeners}
+                    />
                 )}
                 padding="none"
                 withDragHandle
