@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Grid, Stack, Button, MenuItem, DragHandle, Card, AssetCard } from '@contentful/f36-components';
+import {Grid, Stack, Button, MenuItem, DragHandle, Card, AssetCard, Flex, Text } from '@contentful/f36-components';
 import * as icons from '@contentful/f36-icons';
 import { /* useCMA, */ useSDK} from '@contentful/react-apps-toolkit';
 import { DndContext } from '@dnd-kit/core';
@@ -15,13 +15,14 @@ import { css } from "emotion";
 const Field = () => {
 
     const defaultHeight = 245
-    const defaultHeightAfterAddAssets = 220
+    const defaultHeightAfterAddAssets = 225
     const sdk = useSDK();
     const [assets, setAssets] = useState([])
     const [configs, setConfigs] = useState({})
     const [endpoint, setEndpoint] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const [isHasLimit, setIsHasLimit] = useState(false)
+    const [isOverLimit, setIsOverLimit] = useState(false)
 
     const styles = {
         card: css({
@@ -53,6 +54,9 @@ const Field = () => {
             sdk.window.updateHeight(defaultHeightAfterAddAssets * Math.ceil(assets.length / 4))
         }
         else sdk.window.updateHeight(defaultHeight)
+        console.log(assets.length > configs.limit)
+        if (isHasLimit && (assets.length >= configs.limit)) setIsOverLimit(true)
+        else setIsOverLimit(false)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assets])
@@ -89,8 +93,7 @@ const Field = () => {
         }
 
         // Parse the response data as JSON
-        const data = await response.json();
-        return data;
+        return await response.json();
     }
 
     const getAttributesData = (file) => {
@@ -137,7 +140,7 @@ const Field = () => {
     }
 
     const refreshAssets = () => {
-        onSelectedFiles(assets).then((newAssetsList) => {
+        onSelectedFiles(getAssetsbyLimitConfig(assets)).then((newAssetsList) => {
             setAssets(newAssetsList)
             sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
         })
@@ -241,28 +244,40 @@ const Field = () => {
             const assetsMapId = assets.map(e => e.id);
             const oldIndex = assetsMapId.indexOf(active.id);
             const newIndex = assetsMapId.indexOf(over.id);
-            return arrayMove(assets, oldIndex, newIndex);
-          }, () => { sdk.field.setValue(assets).then((data) => sdk.entry.save())});
+            const newPositionedAssets = arrayMove(assets, oldIndex, newIndex);
+            sdk.field.setValue(newPositionedAssets).then((data) => sdk.entry.save())
+            return newPositionedAssets;
+          });
+
         }
       };
 
     return (
-        <div>
-            <Stack>
-                <Button variant="secondary" startIcon={<icons.AssetIcon />} size="small" onClick={() => showDAMWidget()}>
-                    Asset Manager
-                </Button>
-                {assets.length > 0 && (
-                    <>
-                    <Button size="small" startIcon={<icons.CloseIcon />} variant="negative" onClick={() => clearAll()}>
-                        Clear all
+        <>
+            <Flex justifyContent="space-between" alignItems="center">
+                <Stack>
+                    <Button isDisabled={isOverLimit} variant="secondary" startIcon={<icons.AssetIcon />} size="small" onClick={() => showDAMWidget()}>
+                        Asset Manager
                     </Button>
-                    <Button isLoading={isLoading} size="small" startIcon={<icons.CycleIcon />} variant="secondary" onClick={() => refreshAssets()}>
-                        Refresh Assets
-                    </Button>
-                    </>
+                    {assets.length > 0 && (
+                        <>
+                        <Button size="small" startIcon={<icons.CloseIcon />} variant="negative" onClick={() => clearAll()}>
+                            Clear all
+                        </Button>
+                        <Button isLoading={isLoading} size="small" startIcon={<icons.CycleIcon />} variant="secondary" onClick={() => refreshAssets()}>
+                            Refresh Assets
+                        </Button>
+                        </>
+                    )}
+                </Stack>
+                { isHasLimit && (
+                    <div className='limit-content'>
+                       <div style={{ textAlign: 'right'}}>Total: {assets.length} / Limit: {configs.limit}</div>
+                       <div> {isOverLimit && ( <Text fontColor='red600'> Exceeded maximum number of assets </Text> )} </div>
+                    </div>
                 )}
-            </Stack>
+                
+            </Flex>
             
             <Stack style={{marginTop: '20px'}}>
                 <DndContext onDragEnd={handleDragEnd}>
@@ -280,8 +295,7 @@ const Field = () => {
                     </SortableContext>
                 </DndContext>
             </Stack>
-            
-        </div>
+        </>
     )
 };
 
