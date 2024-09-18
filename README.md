@@ -1,191 +1,66 @@
-Contentful App 
-==================
+This project was bootstrapped with [Create Contentful App](https://github.com/contentful/create-contentful-app).
 
-### Features 
+## Available Scripts
 
-* Asset manager Widget in Contentful Content Management
-* Support multiple file type
-* Support metadata: You can manage asset metadata from Filerobot and it will show on your Rest/GraphQL Response
+In the project directory, you can run:
 
-There are 3 simple steps for enabling the App on your Contentfull instance
+#### `npm start`
 
-* Have a Contentful Account
-* Obtain a Filerobot token (request it [**here**](https://www.scaleflex.com/contact-us){target="_blank"})
-* Install the Filerobot App from Marketpkace
-* Add your security configuration parameters to access your Filerobot library
+Creates or updates your app definition in Contentful, and runs the app in development mode.
+Open your app to view it in the browser.
 
-### 1. Sign up
+The page will reload if you make edits.
+You will also see any lint errors in the console.
 
-Contentful is 100% Cloud Native, so you have to sign up for a hosted CMS at [https://be.contentful.com](https://be.contentful.com)
+#### `npm run build`
 
-You’ll get :
+Builds the app for production to the `build` folder.
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-``` 
-https://app.contentful.com/spaces/{Your Space ID}/home
+The build is minified and the filenames include the hashes.
+Your app is ready to be deployed!
+
+#### `npm run upload`
+
+Uploads the build folder to contentful and creates a bundle that is automatically activated.
+The command guides you through the deployment process and asks for all required arguments.
+Read [here](https://www.contentful.com/developers/docs/extensibility/app-framework/create-contentful-app/#deploy-with-contentful) for more information about the deployment process.
+
+#### `npm run upload-ci`
+
+Similar to `npm run upload` it will upload your app to contentful and activate it. The only difference is  
+that with this command all required arguments are read from the environment variables, for example when you add
+the upload command to your CI pipeline.
+
+For this command to work, the following environment variables must be set:
+
+- `CONTENTFUL_ORG_ID` - The ID of your organization
+- `CONTENTFUL_APP_DEF_ID` - The ID of the app to which to add the bundle
+- `CONTENTFUL_ACCESS_TOKEN` - A personal [access token](https://www.contentful.com/developers/docs/references/content-management-api/#/reference/personal-access-tokens)
+
+## Libraries to use
+
+To make your app look and feel like Contentful use the following libraries:
+
+- [Forma 36](https://f36.contentful.com/) – Contentful's design system
+- [Contentful Field Editors](https://www.contentful.com/developers/docs/extensibility/field-editors/) – Contentful's field editor React components
+
+## Using the `contentful-management` SDK
+
+In the default create contentful app output, a contentful management client is
+passed into each location. This can be used to interact with Contentful's
+management API. For example
+
+```js
+// Use the client
+cma.locale.getMany({}).then((locales) => console.log(locales));
 ```
 
-### 2. [Register for a demo](https://www.scaleflex.com/contact-us) if you don't already have a Filerobot account.
+Visit the [`contentful-management` documentation](https://www.contentful.com/developers/docs/extensibility/app-framework/sdk/#using-the-contentful-management-library)
+to find out more.
 
-![Photo alt #responsive](./doc/imgs/1.png)
+## Learn More
 
-### 3. Install from Contentful Marketplace
+[Read more](https://www.contentful.com/developers/docs/extensibility/app-framework/create-contentful-app/) and check out the video on how to use the CLI.
 
-Find it here [https://www.contentful.com/marketplace/](https://www.contentful.com/marketplace/) and install it.
-
-Or click "install now" on [https://www.contentful.com/marketplace/app/scaleflex-filerobot/](https://www.contentful.com/marketplace/app/scaleflex-filerobot/)
-
-![Photo alt #responsive](./doc/imgs/1.png)
-
-![Photo alt #responsive](./doc/imgs/2.png)
-
-![Photo alt #responsive](./doc/imgs/3.png)
-
-![Photo alt #responsive](./doc/imgs/4.png)
-
-### 4. Configure App
-
-![Photo alt #responsive](./doc/imgs/6.png)
-
-* **Filerobot Token:** Your Filerobot token from the Asset hub interface
-* **Security Template Identifier:** Security template ID, found in “Developers” top menu
-* **Filerobot upload directory:** This is the top storage folder for your assets.
-* **Assign to Fields:** App supported only JSON Object Field, you can choose which Field will be used The App
-
-### 5. Usage
-
-##### Step 1: Click to Asset Manager to open FMAW 
-
-![Photo alt #responsive](./doc/imgs/7.png)
-
-
-You can upload new asset(2) / or Choose assets
-
-![Photo alt #responsive](./doc/imgs/8.png)
-
-
-or Choose assets(3) to Add(4)
-
-![Photo alt #responsive](./doc/imgs/9.png)
-
-
-Then you can delete each item or clear all(5)
-
-![Photo alt #responsive](./doc/imgs/10.png)
-
-
-### 6. Json Format
-
-```json 
-{
-   ...
-    "fields": {
-        "image": [
-            {
-                "id": "4f9a6f7b-cdfd-5e4e-9ed3-da9f46750000",
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/12-DSC_7576-final-credit-ESA_A.Conigli-1.jpg",
-                "meta": {
-                    "test": null,
-                    "title": {
-                        "en": "12-DSC_7576-final-credit-ESA_A.Conigli-1"
-                    },
-                    "animal": null,
-                    "description": {
-                        "en": ""
-                    },
-                    "test-number": null,
-                    "publish_date": null
-                },
-                "name": "12-DSC_7576-final-credit-ESA_A.Conigli-1.jpg",
-                "type": "image/jpeg",
-                "extension": "jpg"
-            },
-            {
-                "id": "f0db7b04-c4eb-5470-86f2-a3ce9b450000",
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/18-DSC_7738-final-credit-ESA_A.Conigli.jpg",
-                "meta": {
-                    "test": null,
-                    "title": {
-                        "en": "18-DSC_7738-final-credit-ESA_A.Conigli"
-                    },
-                    "animal": null,
-                    "description": {
-                        "en": ""
-                    },
-                    "test-number": null,
-                    "publish_date": null
-                },
-                "name": "18-DSC_7738-final-credit-ESA_A.Conigli.jpg",
-                "type": "image/jpeg",
-                "extension": "jpg"
-            },
-            {
-                "id": "4f9a6f7b-cdfd-5e4e-9ed3-da9f46750000",
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/12-DSC_7576-final-credit-ESA_A.Conigli-1.jpg",
-                "meta": {
-                    "test": null,
-                    "title": {
-                        "en": "12-DSC_7576-final-credit-ESA_A.Conigli-1"
-                    },
-                    "animal": null,
-                    "description": {
-                        "en": ""
-                    },
-                    "test-number": null,
-                    "publish_date": null
-                },
-                "name": "12-DSC_7576-final-credit-ESA_A.Conigli-1.jpg",
-                "type": "image/jpeg",
-                "extension": "jpg"
-            },
-            {
-                "id": "f0db7b04-c4eb-5470-86f2-a3ce9b450000",
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/18-DSC_7738-final-credit-ESA_A.Conigli.jpg",
-                "meta": {
-                    "test": null,
-                    "title": {
-                        "en": "18-DSC_7738-final-credit-ESA_A.Conigli"
-                    },
-                    "animal": null,
-                    "description": {
-                        "en": ""
-                    },
-                    "test-number": null,
-                    "publish_date": null
-                },
-                "name": "18-DSC_7738-final-credit-ESA_A.Conigli.jpg",
-                "type": "image/jpeg",
-                "extension": "jpg"
-            },
-            {
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/sample.pdf?func=proxy",
-                "id": "3a97dc99-6b18-5602-a604-654925e50000",
-                "name": "sample.pdf",
-                "type": "application/pdf",
-                "meta": {}
-            },
-            {
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/Astronaut_PersonalUse.otf?func=proxy",
-                "id": "7a9cff06-ccf2-5531-b754-98f403a50000",
-                "name": "Astronaut_PersonalUse.otf",
-                "type": "application/vnd.ms-opentype",
-                "meta": {}
-            },
-            {
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/Workspace.html?func=proxy",
-                "id": "f532448d-e6b1-5b74-adff-67f5a7d50000",
-                "name": "Workspace.html",
-                "type": "text/html",
-                "meta": {}
-            },
-            {
-                "url": "https://fkklnkdm.filerobot.com/v7/wp_demo/Financial+Sample.xlsx?func=proxy",
-                "id": "d2c8f2f9-0968-5556-b878-288a41750001",
-                "name": "Financial Sample.xlsx",
-                "type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-                "meta": {}
-            }
-        ],
-        ...
-    }
-}
-```
+Create Contentful App uses [Create React App](https://create-react-app.dev/). You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started) and how to further customize your app.
