@@ -34,7 +34,7 @@ const Dialog = () => {
                     },
                     inline: true,
                     width: '100%',
-                    height: '100%',
+                    height: '700px',
                     resetAfterClose: true,
                     disableExportButton: false,
                     hideExportButtonIcon: true,
@@ -85,7 +85,20 @@ const Dialog = () => {
     if (!configs.token || !configs.secTemplate) return <Paragraph>Please set Scaleflex DAM token and security template
         ID.</Paragraph>;
 
-    return <div id={"filerobot-widget"}></div>;
+    return <>
+        <div id={"filerobot-widget"}></div>
+        <style>
+            {`
+                .filerobot-Explorer-inner {
+                  max-width: 100%;
+                  max-height: 100%;
+                }
+                .filerobot-u-reset{
+                    top: 0!important;
+                }
+          `}
+        </style>
+    </>;
 };
 
 export default Dialog;
