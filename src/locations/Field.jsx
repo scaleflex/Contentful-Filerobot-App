@@ -193,38 +193,36 @@ const Field = () => {
         };
     
         return (
-            <div className=''>
-                <Card
-                    className={styles.card}
-                    dragHandleRender={() => (
-                    <DragHandle
-                        as="button"
-                        className={styles.dragHandle}
-                        label="Move card"
-                        {...attributes}
-                        {...listeners}
-                    />
-                    )}
-                    padding="none"
-                    withDragHandle
-                    ref={setNodeRef}
-                    style={style}
-                >
-                    <AssetCard
-                        className={styles.assetCard}
-                        size="small"
-                        actions={[
-                            <MenuItem key="delete" onClick={() => removeAsset(asset.id)}>
-                                Delete
-                            </MenuItem>,
-                        ]}
-                        src={asset.url + "?w=150&h=150&func=fit&bg_img_fit=1&bg_opacity=0.75"}
-                        type={getType(asset?.type)}
-                        title={asset.name}
-                        isLoading={isLoading}
-                    />
-                </Card>
-            </div>
+            <Card
+                className={styles.card}
+                dragHandleRender={() => (
+                <DragHandle
+                    as="button"
+                    className={styles.dragHandle}
+                    label="Move card"
+                    {...attributes}
+                    {...listeners}
+                />
+                )}
+                padding="none"
+                withDragHandle
+                ref={setNodeRef}
+                style={style}
+            >
+                <AssetCard
+                    className={styles.assetCard}
+                    size="small"
+                    actions={[
+                        <MenuItem key="delete" onClick={() => removeAsset(asset.id)}>
+                            Delete
+                        </MenuItem>,
+                    ]}
+                    src={asset.url + "?w=150&h=150&func=fit&bg_img_fit=1&bg_opacity=0.75"}
+                    type={getType(asset?.type)}
+                    title={asset.name}
+                    isLoading={isLoading}
+                />
+            </Card>
         );
     }
 
