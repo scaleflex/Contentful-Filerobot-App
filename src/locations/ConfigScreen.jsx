@@ -65,7 +65,7 @@ const ConfigScreen = () => {
                             <Flex justifyContent="space-between">
                                 <FormControl.HelpText>
                                     Scaleflex DAM token from your account, you can obtain a token by fill in
-                                    <TextLink href="https://www.scaleflex.com/contact-us" target="_blank"> Scaleflex contact page</TextLink> .
+                                    <TextLink href="https://www.scaleflex.com/contact-us" target="_blank" style={{marginLeft: "3px"}}> Scaleflex contact page</TextLink> .
                                 </FormControl.HelpText>
                             </Flex>
                         </FormControl>
