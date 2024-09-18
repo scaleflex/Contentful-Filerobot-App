@@ -14,7 +14,8 @@ import { css } from "emotion";
   
 const Field = () => {
 
-    const defaultHeight = 230
+    const defaultHeight = 245
+    const defaultHeightAfterAddAssets = 220
     const sdk = useSDK();
     const [assets, setAssets] = useState([])
     const [configs, setConfigs] = useState({})
@@ -47,8 +48,8 @@ const Field = () => {
     }
 
     useEffect(() => {
-        if (assets.length > 0) {
-            sdk.window.updateHeight(defaultHeight * Math.ceil(assets.length / 4))
+        if (assets.length > 4) {
+            sdk.window.updateHeight(defaultHeightAfterAddAssets * Math.ceil(assets.length / 4))
         }
         else sdk.window.updateHeight(defaultHeight)
 
@@ -123,6 +124,13 @@ const Field = () => {
 
     const updateAssets = (assetsCurrent) => {
         onSelectedFiles(getAssetsbyLimitConfig(getUniqueAssets(assetsCurrent))).then((newAssetsList) => {
+            setAssets(newAssetsList)
+            sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
+        })
+    }
+
+    const refreshAssets = () => {
+        onSelectedFiles(assets).then((newAssetsList) => {
             setAssets(newAssetsList)
             sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
         })
@@ -213,9 +221,9 @@ const Field = () => {
                         src={asset.url + "?w=150&h=150&func=fit&bg_img_fit=1&bg_opacity=0.75"}
                         type={getType(asset?.type)}
                         title={asset.name}
+                        isLoading={isLoading}
                     />
                 </Card>
-              
             </div>
         );
     }
@@ -240,9 +248,14 @@ const Field = () => {
                     Asset Manager
                 </Button>
                 {assets.length > 0 && (
+                    <>
                     <Button size="small" startIcon={<icons.CloseIcon />} variant="negative" onClick={() => clearAll()}>
                         Clear all
                     </Button>
+                    <Button isLoading={isLoading} size="small" startIcon={<icons.CycleIcon />} variant="secondary" onClick={() => refreshAssets()}>
+                        Refresh Assets
+                    </Button>
+                    </>
                 )}
             </Stack>
             
