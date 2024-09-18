@@ -1,11 +1,12 @@
 import React, {useCallback, useState, useEffect} from 'react';
-import {Heading, Form, Flex, Image, Text, TextInput, FormControl, Paragraph, Box, TextLink} from '@contentful/f36-components';
+import {Heading, Form, Flex, Image, Text, TextInput, FormControl, Paragraph, Box, TextLink, Button} from '@contentful/f36-components';
 import { useSDK} from '@contentful/react-apps-toolkit';
 
 
 const ConfigScreen = () => {
     const [parameters, setParameters] = useState({});
     const sdk = useSDK();
+
     const onConfigure = useCallback(async () => {
         const currentState = await sdk.app.getCurrentState();
         return {
@@ -13,6 +14,32 @@ const ConfigScreen = () => {
             targetState: currentState,
         };
     }, [parameters, sdk]);
+
+    const [isValidated, setIsValidated] = useState(false);
+    const [isNotValid, setIsNotValid] = useState(false);
+
+    const validateSetting = () => {
+        const token = parameters?.token;
+        const securityTemplate = parameters?.secTemplate;
+
+        const apiEndpoint = 'https://api.filerobot.com/';
+        const apiAuthUrl = apiEndpoint + token + '/key/' + securityTemplate;
+
+        fetch(apiAuthUrl)
+            .then(response => {
+                if (response.ok) {
+                    setIsValidated(true);
+                    setIsNotValid(false);
+                } else {
+                    setIsValidated(true);
+                    setIsNotValid(true);
+                }
+            })
+            .catch(error => {
+                setIsValidated(true);
+                setIsNotValid(true);
+            });
+    }
 
     useEffect(() => {
         sdk.app.onConfigure(() => onConfigure());
@@ -52,7 +79,11 @@ const ConfigScreen = () => {
                     <Paragraph>Scaleflex DAM(Filerobot) is a scalable and performance-oriented Digital Asset Management platform with integrated image and video optimizers to store, organize,
                         optimize and deliver your media assets such as images, videos, PDFs and many other brand assets fast all around the world to all device types.</Paragraph>
                     <Box style={{height: "1px", width: "100%", backgroundColor: "#d0d4d6", margin: "20px 0"}}/>
+                    <Box style={{border: "1px solid lightgray", padding: "10px", borderRadius: "5px", marginBottom: "10px"}}>
+                        <Text fontColor="gray800"><b>Notice: </b>Please hard refresh your browser each time you change the settings for them to take effect.</Text>
+                    </Box>
                     <Form>
+                        <Heading fontSize="fontSizeM" fontColor="blue500">Basic settings</Heading>
                         <FormControl id="token">
                             <FormControl.Label>Token</FormControl.Label>
                             <TextInput
@@ -100,6 +131,21 @@ const ConfigScreen = () => {
                                 </FormControl.HelpText>
                             </Flex>
                         </FormControl>
+                        {parameters?.token?.length > 0 && parameters?.secTemplate?.length > 0 && (
+                            <Button onClick={() => validateSetting()} variant="secondary" style={{marginBottom: "15px"}}>Verify Scaleflex DAM Setting</Button>
+                        )}
+                        {isValidated && (
+                            <Box>
+                                {isNotValid && (
+                                    <Text fontColor="red600">Your token or security template is incorrect. Please double-check and try again!</Text>
+                                )}
+                                {!isNotValid && (
+                                    <Text fontColor="green600">Your settings are valid!</Text>
+                                )}
+                            </Box>
+                        )}
+                        <Box style={{height: "1px", width: "100%", backgroundColor: "#d0d4d6", margin: "20px 0"}}/>
+                        <Heading fontSize="fontSizeM" fontColor="blue500">Addition settings</Heading>
                         <FormControl id="limit">
                             <FormControl.Label>Limit</FormControl.Label>
                             <TextInput
