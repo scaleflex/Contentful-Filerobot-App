@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import {Grid, Stack, Button, Asset, MenuItem, DragHandle, Card, AssetCard } from '@contentful/f36-components';
+import {Grid, Stack, Button, MenuItem, DragHandle, Card, AssetCard } from '@contentful/f36-components';
 import * as icons from '@contentful/f36-icons';
 import { /* useCMA, */ useSDK} from '@contentful/react-apps-toolkit';
 import { DndContext } from '@dnd-kit/core';
@@ -13,8 +13,11 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from "emotion";
   
 const Field = () => {
+    const defaultHeight = 225
     const sdk = useSDK();
     const [assets, setAssets] = useState([])
+    const [configs, setConfigs] = useState({})
+    const [endpoint, setEndpoint] = useState('')
     const styles = {
         card: css({
           // This lets us change z-index when dragging
@@ -26,14 +29,61 @@ const Field = () => {
         assetCard: css({
             borderWidth: 0
         })
-      };
+    };
+
+    const getUniqueAssets = (assetsCurrent) => {
+        return assetsCurrent.filter((value, index, self) =>
+            index === self.findIndex((t) => (
+                t.id === value.id
+            )))
+    }
+
+    const getAssetsbyLimitConfig = (assetsCurrent) => {
+        if (configs.hasOwnProperty('limit') && configs.limit > 0) return assetsCurrent.slice(0, configs.limit)
+        else return assetsCurrent
+    }
+
+    const updateAssets = (assetsCurrent) => {
+        return getAssetsbyLimitConfig(getUniqueAssets(assetsCurrent))
+    }
+
+    useEffect(() => {
+        if (assets.length > 0) {
+            sdk.window.updateHeight(defaultHeight * Math.ceil(assets.length / 4))
+        }
+        else sdk.window.updateHeight(defaultHeight)
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [assets])
 
     useEffect(() => {
         let storedAssets = sdk.field.getValue();
         storedAssets = storedAssets ? storedAssets : [];
-        if (storedAssets.length > 0) setAssets(storedAssets)
-        sdk.window.updateHeight(315)
+        if (storedAssets.length > 0) {
+            setAssets(storedAssets)
+        }
+        setConfigs(sdk.parameters.installation)
     }, [sdk]);
+
+    useEffect(() => {
+        //setEndpoint('https://api.filerobot.com/' + data?.options.token + '/v5')
+        console.log(configs)
+    }, [configs]);
+
+      // Function to fetch data from an API
+    async function fetchfileData(uuid) {
+        const url = endpoint + '/files/' + uuid + '?format=select:human'
+        const response = await fetch(url);
+
+        // Check if the request was successful
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+
+        // Parse the response data as JSON
+        const data = await response.json();
+        return data;
+    }
 
     const showDAMWidget = () => {
         sdk.dialogs
@@ -48,7 +98,8 @@ const Field = () => {
             })
             .then((assetItems) => {
                 if (Array.isArray(assetItems) && assetItems.length > 0) {
-                    let newAssetsList = assets.concat(assetItems)
+                    console.log(assetItems)
+                    let newAssetsList = updateAssets(assets.concat(assetItems))
                     setAssets(newAssetsList)
                     sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
                 }

@@ -14,6 +14,14 @@ const Dialog = () => {
     const configs = sdk.parameters.installation;
     const filerobot = useRef(null);
 
+    if (!configs.limitType || configs.limitType === "") {
+        configs.limitType = [];
+    } else {
+        configs.limitType = configs.limitType.split(",").map(function(item) {
+            return item.trim().toUpperCase()
+        })
+    }
+
     if (!configs.rootDir || configs.rootDir === "") {
         configs.rootDir = "/";
     } else if (configs.rootDir.charAt(0) !== "/") {
@@ -52,6 +60,9 @@ const Dialog = () => {
                             mutualizedExportButtonLabel: 'Insert',
                             mutualizedDownloadButton: 'Insert',
                         },
+                    },
+                    filters: {
+                        mimeTypes: configs.limitType,
                     }
                 })
                 .use(XHRUpload)
