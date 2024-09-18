@@ -1,5 +1,5 @@
 import React, {useCallback, useState, useEffect} from 'react';
-import {Heading, Form, Flex, Image, Text, TextInput, FormControl, Paragraph, Box} from '@contentful/f36-components';
+import {Heading, Form, Flex, Image, Text, TextInput, FormControl, Paragraph, Box, TextLink} from '@contentful/f36-components';
 import { useSDK} from '@contentful/react-apps-toolkit';
 
 
@@ -49,7 +49,7 @@ const ConfigScreen = () => {
                     }}
                 >
                     <Heading fontSize="fontSizeL">About Scaleflex DAM</Heading>
-                    <Paragraph>Scaleflex DAM is a scalable and performance-oriented Digital Asset Management platform with integrated image and video optimizers to store, organize,
+                    <Paragraph>Scaleflex DAM(Filerobot) is a scalable and performance-oriented Digital Asset Management platform with integrated image and video optimizers to store, organize,
                         optimize and deliver your media assets such as images, videos, PDFs and many other brand assets fast all around the world to all device types.</Paragraph>
                     <Box style={{height: "1px", width: "100%", backgroundColor: "#d0d4d6", margin: "20px 0"}}/>
                     <Form>
@@ -64,7 +64,8 @@ const ConfigScreen = () => {
                             />
                             <Flex justifyContent="space-between">
                                 <FormControl.HelpText>
-                                    Scaleflex DAM token from your account
+                                    Scaleflex DAM token from your account, you can obtain a token by fill in
+                                    <TextLink href="https://www.scaleflex.com/contact-us" target="_blank"> Scaleflex contact page</TextLink> .
                                 </FormControl.HelpText>
                             </Flex>
                         </FormControl>
