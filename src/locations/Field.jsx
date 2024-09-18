@@ -82,8 +82,7 @@ const Field = () => {
         }
 
         // Parse the response data as JSON
-        const data = await response.json();
-        return data;
+        return await response.json();
     }
 
     const getAttributesData = (file) => {
@@ -234,7 +233,9 @@ const Field = () => {
             const assetsMapId = assets.map(e => e.id);
             const oldIndex = assetsMapId.indexOf(active.id);
             const newIndex = assetsMapId.indexOf(over.id);
-            return arrayMove(assets, oldIndex, newIndex);
+            const newPositionedAssets = arrayMove(assets, oldIndex, newIndex);
+            sdk.field.setValue(newPositionedAssets).then((data) => sdk.entry.save())
+            return newPositionedAssets;
           });
         }
       };
