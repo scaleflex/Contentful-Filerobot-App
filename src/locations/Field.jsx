@@ -142,7 +142,7 @@ const Field = () => {
     }
 
     const refreshAssets = () => {
-        onSelectedFiles(getAssetsbyLimitConfig(assets)).then((newAssetsList) => {
+        onSelectedFiles(assets).then((newAssetsList) => {
             setAssets(newAssetsList)
             sdk.field.setValue(newAssetsList).then((data) => sdk.entry.save())
         })
