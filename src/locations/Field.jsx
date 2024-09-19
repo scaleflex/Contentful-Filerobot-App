@@ -179,6 +179,7 @@ const Field = () => {
 
     const getType = (type) => {
         if (type?.includes('pdf')) return 'pdf'
+        else if (type?.includes('icon')) return 'archive'
         else if (type?.includes('text')) return 'plaintext'
         else if (type?.includes('image')) return 'image'
         else if (type?.includes('audio')) return 'audio'
