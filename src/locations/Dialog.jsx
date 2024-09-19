@@ -69,7 +69,7 @@ const Dialog = () => {
                 .on('export', async (files, popupExportSucessMsgFn, downloadFilesPackagedFn, downloadFileFn) => {
                     let assets = []
                     files.forEach((item, index) => {
-                        console.log(JSON.stringify(item))
+                        //console.log(JSON.stringify(item))
                         let url = new URL(item.file?.url?.cdn);
                         let params = new URLSearchParams(url.search);
                         params.delete('vh');

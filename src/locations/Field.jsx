@@ -13,7 +13,6 @@ import { CSS } from '@dnd-kit/utilities';
 import { css } from "emotion";
   
 const Field = () => {
-
     const defaultHeight = 245
     const defaultHeightAfterAddAssets = 225
     const sdk = useSDK();
@@ -54,9 +53,6 @@ const Field = () => {
             sdk.window.updateHeight(defaultHeightAfterAddAssets * Math.ceil(assets.length / 4))
         }
         else sdk.window.updateHeight(defaultHeight)
-        console.log(assets.length > configs.limit)
-        if (isHasLimit && (assets.length >= configs.limit)) setIsOverLimit(true)
-        else setIsOverLimit(false)
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [assets])
@@ -81,6 +77,11 @@ const Field = () => {
         else setIsHasLimit(false)
 
     }, [configs]);
+
+    useEffect(() => {
+        if (isHasLimit && (assets.length >= configs.limit)) setIsOverLimit(true)
+        else setIsOverLimit(false)
+    }, [isHasLimit, assets, configs])
 
       // Function to fetch data from an API
     async function fetchFileData(uuid) {
