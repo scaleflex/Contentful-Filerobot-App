@@ -1,0 +1,29 @@
+# nikpack.toml
+
+[build]
+  # Define the build command to create production assets
+  command = "npm run build"
+  # Directory where the build output is located
+  output_dir = "build"
+
+[deploy]
+  # Deployment command to deploy the built assets
+  command = "npm run deploy"
+
+[server]
+  # Port where the React app will be served
+  port = 3000
+  # Directory to serve static files from
+  static_dir = "build"
+
+# Optional: Environment-specific settings
+[environment]
+  [environment.development]
+    # Environment-specific settings for development
+    build_command = "npm run start"
+    port = 3000
+
+  [environment.production]
+    # Environment-specific settings for production
+    build_command = "npm run build"
+    port = 80
