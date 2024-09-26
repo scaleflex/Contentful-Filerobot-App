@@ -172,8 +172,8 @@ const ConfigScreen = () => {
                             />
                             <Flex justifyContent="space-between">
                                 <FormControl.HelpText>
-                                    An array of strings containing information (JSON attributes) that you want to store in a Contentful field<br/>
-                                    <Text fontColor="blue500">is optional, separate value by comma (ex: meta, tags, info)</Text>
+                                    A string containing information (JSON attributes) that you want to store in a Contentful field<br/>
+                                    <Text fontColor="blue500">is optional, separated value by commas (ex: meta, tags, info)</Text>
                                 </FormControl.HelpText>
                             </Flex>
                         </FormControl>
@@ -187,9 +187,9 @@ const ConfigScreen = () => {
                             />
                             <Flex justifyContent="space-between">
                                 <FormControl.HelpText>
-                                    An Array of strings, acceptable values any/all of the following ['IMAGE', 'VIDEO', 'AUDIO', 'DOCUMENT', 'ARCHIVE'] or ['image', 'video', 'audio', 'application', 'application/zip, application/x-zip-compressed, application/vnd.rar, application/x-rar-compressed'] -- constants are preferred --.
+                                    String type, acceptable values: any or all of the following: 'image', 'video', 'audio', 'application', 'application/zip', 'application/x-zip-compressed', 'application/vnd.rar', 'application/x-rar-compressed'.
                                     <br/>
-                                    <Text fontColor="blue500">is optional, separate value by comma (ex: image, document, video, audio)</Text>
+                                    <Text fontColor="blue500">is optional, separated by commas (ex: image, document, video, audio)</Text>
                                 </FormControl.HelpText>
                             </Flex>
                         </FormControl>
